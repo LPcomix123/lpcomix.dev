@@ -13,90 +13,47 @@ async function getLatestCommit() {
     const refreshButton = document.getElementById("refresh-commit");
 
     title.textContent = "Loading...";
-    date.textContent = "Checking GitHub...";
+    date.textContent = "Getting latest commit...";
     link.style.display = "none";
 
     refreshButton.disabled = true;
     refreshButton.textContent = "🔄 Refreshing...";
 
     try {
-        // Get all public repositories
-        let repos = [];
-        let page = 1;
+        const response = await fetch(
+            `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&per_page=1`,
+            {
+                headers: {
+                    "Accept": "application/vnd.github+json",
+                    "X-GitHub-Api-Version": "2022-11-28"
+                }
+            }
+        );
 
-        while (true) {
-            const response = await fetch(
-                `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=updated`
+        const data = await response.json();
+
+        console.log("GitHub response:", data);
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || `GitHub returned ${response.status}`
             );
-
-            if (!response.ok) {
-                throw new Error("Could not get repositories");
-            }
-
-            const pageRepos = await response.json();
-
-            repos.push(...pageRepos);
-
-            if (pageRepos.length < 100) {
-                break;
-            }
-
-            page++;
         }
 
-        let latestCommit = null;
-        let latestRepo = null;
-
-        // Check every repository
-        for (const repo of repos) {
-            const response = await fetch(
-                `https://api.github.com/repos/${username}/${repo.name}/commits?per_page=1`
-            );
-
-            if (!response.ok) {
-                continue;
-            }
-
-            const commits = await response.json();
-
-            if (!Array.isArray(commits) || commits.length === 0) {
-                continue;
-            }
-
-            const commit = commits[0];
-
-            const commitDate = new Date(
-                commit.commit.author.date
-            );
-
-            if (
-                latestCommit === null ||
-                commitDate > new Date(latestCommit.commit.author.date)
-            ) {
-                latestCommit = commit;
-                latestRepo = repo;
-            }
+        if (!data.items || data.items.length === 0) {
+            throw new Error("No commits found");
         }
 
-        if (latestCommit === null) {
-            title.textContent = "No commits found";
-            date.textContent = "No public repository commits were found.";
-            return;
-        }
+        const commit = data.items[0];
 
-        // Display commit message
         title.textContent =
-            latestCommit.commit.message.split("\n")[0];
+            commit.commit.message.split("\n")[0];
 
-        // Display repository + date
         date.textContent =
-            `${latestRepo.name} • ` +
-            new Date(
-                latestCommit.commit.author.date
-            ).toLocaleString();
+            `${commit.repository.name} • ` +
+            new Date(commit.commit.author.date).toLocaleString();
 
-        // Link to commit
-        link.href = latestCommit.html_url;
+        link.href = commit.html_url;
         link.textContent = "View commit →";
         link.style.display = "inline-block";
 
@@ -104,7 +61,9 @@ async function getLatestCommit() {
         console.error("GitHub error:", error);
 
         title.textContent = "Couldn't load latest commit";
-        date.textContent = "GitHub could not be reached.";
+        date.textContent = error.message;
+
+        link.style.display = "none";
     }
 
     refreshButton.disabled = false;
