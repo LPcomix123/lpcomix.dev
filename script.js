@@ -4,8 +4,6 @@ function scrollToProjects() {
     });
 }
 
-const username = "LPcomix123";
-
 async function getLatestCommit() {
     const title = document.getElementById("commit-title");
     const date = document.getElementById("commit-date");
@@ -20,49 +18,33 @@ async function getLatestCommit() {
     refreshButton.textContent = "🔄 Refreshing...";
 
     try {
-        const response = await fetch(
-            `https://api.github.com/search/commits?q=author:${username}&sort=author-date&order=desc&per_page=1`,
-            {
-                headers: {
-                    "Accept": "application/vnd.github+json",
-                    "X-GitHub-Api-Version": "2022-11-28"
-                }
-            }
-        );
+        const response = await fetch("/api/latest-commit");
+
+        if (!response.ok) {
+            throw new Error("Server could not get the latest commit");
+        }
 
         const data = await response.json();
 
-        console.log("GitHub response:", data);
-
-        if (!response.ok) {
-            throw new Error(
-                data.message || `GitHub returned ${response.status}`
-            );
+        if (data.error) {
+            throw new Error(data.error);
         }
 
-        if (!data.items || data.items.length === 0) {
-            throw new Error("No commits found");
-        }
-
-        const commit = data.items[0];
-
-        title.textContent =
-            commit.commit.message.split("\n")[0];
+        title.textContent = data.message;
 
         date.textContent =
-            `${commit.repository.name} • ` +
-            new Date(commit.commit.author.date).toLocaleString();
+            `${data.repository} • ` +
+            new Date(data.date).toLocaleString();
 
-        link.href = commit.html_url;
+        link.href = data.url;
         link.textContent = "View commit →";
         link.style.display = "inline-block";
 
     } catch (error) {
-        console.error("GitHub error:", error);
+        console.error("Latest commit error:", error);
 
         title.textContent = "Couldn't load latest commit";
         date.textContent = error.message;
-
         link.style.display = "none";
     }
 
