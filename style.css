@@ -96,7 +96,8 @@ button:hover {
     transform: translateY(-2px);
 }
 
-a {    width: fit-content;
+a {
+    width: fit-content;
 
     padding: 14px 24px;
 
@@ -179,6 +180,11 @@ footer {
     border-top: 1px solid #1e293b;
 }
 
+
+/* =========================
+   MOBILE
+   ========================= */
+
 @media (max-width: 700px) {
 
     nav {
@@ -201,9 +207,7 @@ footer {
     nav a {
         margin: 0;
         padding: 10px 16px;
-
         font-size: 0.9rem;
-
         border-radius: 10px;
     }
 
@@ -214,6 +218,7 @@ footer {
     .hero {
         min-height: 70vh;
         max-width: 100%;
+        width: 100%;
     }
 
     .small {
@@ -224,6 +229,7 @@ footer {
     h1 {
         font-size: 2.7rem;
         line-height: 1.1;
+        word-break: normal;
     }
 
     .hero .intro {
@@ -231,11 +237,23 @@ footer {
         line-height: 1.5;
     }
 
+    /*
+       Stack the hero buttons on phones
+       so they never overflow the screen.
+    */
+
     .hero button,
     .hero a {
+        display: block;
+        width: 100%;
         max-width: 100%;
+
+        margin-left: 0;
+
         padding: 12px 18px;
         font-size: 0.95rem;
+
+        white-space: normal;
     }
 
     section {
@@ -268,6 +286,10 @@ footer {
     }
 }
 
+
+/* =========================
+   SMALL PHONES
+   ========================= */
 
 @media (max-width: 400px) {
 
