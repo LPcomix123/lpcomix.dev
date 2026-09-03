@@ -4,21 +4,31 @@ function scrollToProjects() {
     });
 }
 
-async function getLatestCommit() {
+async function getLatestCommit(forceRefresh = false) {
     const title = document.getElementById("commit-title");
     const date = document.getElementById("commit-date");
     const link = document.getElementById("commit-link");
     const refreshButton = document.getElementById("refresh-commit");
 
     title.textContent = "Loading...";
-    date.textContent = "Getting latest commit...";
+    date.textContent = forceRefresh
+        ? "Checking GitHub..."
+        : "Getting latest commit...";
     link.style.display = "none";
 
     refreshButton.disabled = true;
-    refreshButton.textContent = "🔄 Refreshing...";
+    refreshButton.textContent = forceRefresh
+        ? "🔄 Checking..."
+        : "🔄 Refreshing...";
 
     try {
-        const response = await fetch("/api/latest-commit");
+        const url = forceRefresh
+            ? "/api/latest-commit?refresh=true"
+            : "/api/latest-commit";
+
+        const response = await fetch(url, {
+            cache: "no-store"
+        });
 
         if (!response.ok) {
             throw new Error("Server could not get the latest commit");
