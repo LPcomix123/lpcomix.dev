@@ -184,17 +184,69 @@ footer {
     nav {
         flex-direction: column;
         gap: 15px;
+        padding: 20px 5%;
     }
 
     nav a {
-        margin: 0 8px;
+        margin: 0 6px;
+    }
+
+    main {
+        padding: 0 18px;
+    }
+
+    .hero {
+        min-height: 70vh;
     }
 
     h1 {
-        font-size: 3rem;
+        font-size: 2.7rem;
+        line-height: 1.1;
+    }
+
+    .hero .intro {
+        font-size: 1.1rem;
+    }
+
+    section {
+        padding: 55px 0;
+    }
+
+    section > h2 {
+        font-size: 1.7rem;
     }
 
     .projects {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
+
+    .card,
+    .commit {
+        padding: 20px;
+    }
+
+    footer {
+        padding: 30px 18px;
+    }
+
+@media (max-width: 400px) {
+
+    nav a {
+        margin: 0 3px;
+    }
+
+    h1 {
+        font-size: 2.3rem;
+    }
+
+    .hero .intro {
+        font-size: 1rem;
+    }
+
+    button,
+    a {
+        padding: 12px 18px;
+    }
+}
 }
