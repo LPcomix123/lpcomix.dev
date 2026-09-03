@@ -215,11 +215,12 @@ footer {
         padding: 0 18px;
     }
 
-    .hero {
-        min-height: 70vh;
-        max-width: 100%;
-        width: 100%;
-    }
+.hero {
+    min-height: 70vh;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+}
 
     .small {
         font-size: 0.75rem;
@@ -242,19 +243,23 @@ footer {
        so they never overflow the screen.
     */
 
-    .hero button,
-    .hero a {
-        display: block;
-        width: 100%;
-        max-width: 100%;
+.hero button,
+.hero a {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
 
-        margin-left: 0;
+    margin-left: 0;
+    margin-right: 0;
 
-        padding: 12px 18px;
-        font-size: 0.95rem;
+    padding: 12px 18px;
 
-        white-space: normal;
-    }
+    font-size: 0.95rem;
+
+    white-space: normal;
+    overflow-wrap: break-word;
+}
 
     section {
         padding: 55px 0;
@@ -306,9 +311,29 @@ footer {
         font-size: 1rem;
     }
 
-    .hero button,
-    .hero a {
-        padding: 11px 15px;
-        font-size: 0.9rem;
-    }
+.hero {
+    min-height: 70vh;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.hero button,
+.hero a {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    margin-left: 0;
+    margin-right: 0;
+
+    padding: 12px 18px;
+
+    font-size: 0.95rem;
+
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
 }
